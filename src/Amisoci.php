@@ -1,27 +1,27 @@
 <?php
 	namespace Amisoci;
+	class Element {
+		private $attribute = [];
+		function __construct($element){
+			$this->element = $element;
+		}
+		function set($name,$value){
+			$this->attribute[$name] = str_replace("\n","",$value);
+		}
+		function innerHTML($text){
+			$this->innerHTML=$text;
+		}
+		function draw(){
+			$text = "<".$this->element;
+			foreach($this->attribute as $name=>$value){
+				$text .= " ".$name."=\"".$value."\"";
+			}
+			$text.=">".$this->innerHTML."</".$this->element.">";
+			return $text;
+		}
+	}
 	class Amisoci{
 		public static function dump($data){
-			class Element {
-				private $attribute = [];
-				function __construct($element){
-					$this->element = $element;
-				}
-				function set($name,$value){
-					$this->attribute[$name] = str_replace("\n","",$value);
-				}
-				function innerHTML($text){
-					$this->innerHTML=$text;
-				}
-				function draw(){
-					$text = "<".$this->element;
-					foreach($this->attribute as $name=>$value){
-						$text .= " ".$name."=\"".$value."\"";
-					}
-					$text.=">".$this->innerHTML."</".$this->element.">";
-					return $text;
-				}
-			}
 			$backtrace = debug_backtrace();
 			$backtrace = $backtrace[count($backtrace)-1];
 			function expandArrows(){
