@@ -1,4 +1,5 @@
 {
 	"name": "amisoci/styleddump",
-	"description": "dump function to make variables readable"
+	"description": "dump function to make variables readable",
+	"license": "MIT"
 }
