@@ -4,7 +4,7 @@
 	"license": "MIT",
 	"autoload": {
 		"psr-4": {
-			"amisoci\\": "/src"
+			"Amisoci\\": "/src"
 		}
 	}
 }
