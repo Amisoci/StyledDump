@@ -20,7 +20,7 @@
 			return $text;
 		}
 	}
-	class Amisoci{
+	class Tools{
 		public static function dump($data){
 			$backtrace = debug_backtrace();
 			$backtrace = $backtrace[count($backtrace)-1];
