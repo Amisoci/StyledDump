@@ -2,6 +2,8 @@
 	namespace Amisoci;
 	class Element {
 		private $attribute = [];
+		private $element="";
+		private $innerHTML="";
 		function __construct($element){
 			$this->element = $element;
 		}
