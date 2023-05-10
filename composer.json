@@ -9,8 +9,5 @@
 			"email": "codeychase@amisoci.com"
 		}
 	],
-	"autoload": {
-		"psr-4": {"vitalis\\HelloWorld\\": "src/"}
-	},
 	"require": {}
 }
