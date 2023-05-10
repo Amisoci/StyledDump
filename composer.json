@@ -1,0 +1,17 @@
+{
+	"name": "amisoci/styleddump",
+	"description": "dump function to make variables readable",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Codey Miller",
+			"email": "codeychase@amisoci.com"
+		}
+	],
+	"minimum-stability": "stable",
+	"autoload": {
+		"psr-4": {"vitalis\\HelloWorld\\": "src/"}
+	},
+	"require": {}
+}
