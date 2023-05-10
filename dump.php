@@ -1,4 +1,5 @@
 <?php
+	namespace Amisoci;
 	function dump($data){
 		class Element {
 			private $attribute = [];
