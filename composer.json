@@ -2,5 +2,9 @@
 	"name": "amisoci/styleddump",
 	"description": "dump function to make variables readable",
 	"license": "MIT",
-	"version": "1.0.3"
+	"autoload": {
+		"psr-4": {
+			"amisoci\\": "/src"
+		}
+	}
 }
