@@ -27,7 +27,24 @@
 			$backtrace = debug_backtrace();
 			$backtrace = $backtrace[count($backtrace)-1];
 			function expandArrows(){
-				$text = "";
+				$text = "";				
+				$down_arrow = new Element("div");
+				$down_arrow->set("style","
+					display:inline-block;
+					width:0;height:0;
+					border-left:5px solid transparent;
+					border-right:5px solid transparent;
+					border-top:5px solid green;
+					cursor:pointer;
+				");
+				$down_arrow->set("onclick","
+					this.style.display='none';
+					this.nextElementSibling.style.display='inline-block';
+					this.nextElementSibling.nextElementSibling.style.display='inline';
+					this.nextElementSibling.nextElementSibling.nextElementSibling.style.display='none';
+				");
+				$text .= $down_arrow->draw();
+				
 				$right_arrow = new Element("div");
 				$right_arrow->set("style","
 					display:inline-block;
@@ -40,31 +57,20 @@
 				");
 				$right_arrow->set("onclick","
 					this.style.display='none';
-					this.nextElementSibling.style.display='inline-block';
-					this.nextElementSibling.nextElementSibling.style.display='none';
-					this.nextElementSibling.nextElementSibling.nextElementSibling.style.display='inline';
+					this.previousElementSibling.style.display='inline-block';
+					this.nextElementSibling.style.display='none';
+					this.nextElementSibling.nextElementSibling.style.display='inline';
 				");
 				$text .= $right_arrow->draw();
 				
-				$down_arrow = new Element("div");
-				$down_arrow->set("style","
-					display:inline-block;
-					width:0;height:0;
-					border-left:5px solid transparent;
-					border-right:5px solid transparent;
-					border-top:5px solid green;
-					cursor:pointer;
-				");
-				$down_arrow->set("onclick","
-					this.style.display='none';
-					this.previousElementSibling.style.display='inline-block';
-					this.nextElementSibling.style.display='inline';
-					this.nextElementSibling.nextElementSibling.style.display='none';
-				");
-				$text .= $down_arrow->draw();
-				
 				$ellipsis = new Element("span");
-				$ellipsis->set("style","display:none;");
+				$ellipsis->set("style","display:none;cursor:pointer;");
+				$ellipsis->set("onclick","
+					this.style.display='none';
+					this.previousElementSibling.style.display='none';
+					this.previousElementSibling.previousElementSibling.style.display='inline-block';
+					this.nextElementSibling.style.display='inline';
+				");
 				$ellipsis->innerHTML("...");
 				$text .= $ellipsis->draw();
 				
@@ -78,12 +84,12 @@
 					$text .= expandArrows();
 					
 					$text .= "<span>
-							<br>";
+							<div>";
 					$glue = "";
 					for($i=0;$i<$indent;$i++){
 						$glue .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 					}
-					$text .= $glue.implode(",<br>".$glue,array_map(function($k,$v) use($indent){
+					$text .= $glue.implode(",</div><div>".$glue,array_map(function($k,$v) use($indent){
 						if(is_int($k)){
 							$html=$k;
 						} else {
@@ -93,7 +99,7 @@
 							$html=$array_key_element->draw();
 						}
 						return $html." => ".operation($v,$indent+1);
-					},array_keys($data),array_values($data)))."<br>";
+					},array_keys($data),array_values($data)))."</div>";
 					for($i=1;$i<$indent;$i++){
 						$text .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 					}
@@ -122,12 +128,12 @@
 					$text.=")";
 				} elseif(is_object($data)){
 					$array_object = get_object_vars($data);
-					$text .= "object(".get_class($data).") {".expandArrows()."<span><br>";
+					$text .= "object(".get_class($data).") <sub>".count($array_object)."</sub> {".expandArrows()."<span><div>";
 					$glue = "";
 					for($i=0;$i<$indent;$i++){
 						$glue .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 					}
-					$text .= $glue.implode(",<br>".$glue,array_map(function($k,$v) use($indent){
+					$text .= $glue.implode(",</div><div>".$glue,array_map(function($k,$v) use($indent){
 						if(is_int($k)){
 							$html = $k;
 						} else {
@@ -137,7 +143,7 @@
 							$html = $object_key_element->draw();
 						}
 						return $html." => ".operation($v,$indent+1);
-						},array_keys($array_object),array_values($array_object)))."<br>";
+						},array_keys($array_object),array_values($array_object)))."</div>";
 					for($i=1;$i<$indent;$i++){
 						$text .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 					}
