@@ -8,7 +8,7 @@
 			$this->element = $element;
 		}
 		function set($name,$value){
-			$this->attribute[$name] = str_replace("\n","",$value);
+			$this->attribute[$name] = str_replace("\t","",str_replace("\n","",$value));
 		}
 		function innerHTML($text){
 			$this->innerHTML=$text;
@@ -37,11 +37,28 @@
 					border-top:5px solid green;
 					cursor:pointer;
 				");
-				$down_arrow->set("onclick","
+				$down_arrow->set("class","amisoci-down-arrow");
+				/*$down_arrow->set("onclick","
 					this.style.display='none';
 					this.nextElementSibling.style.display='inline-block';
 					this.nextElementSibling.nextElementSibling.style.display='inline';
 					this.nextElementSibling.nextElementSibling.nextElementSibling.style.display='none';
+					console.log(window.event);
+				");*/
+				$down_arrow->set("onclick","
+					if(window.event.shiftKey){
+						this.parentElement.querySelectorAll('.amisoci-down-arrow, .amisoci-expand-content').forEach(function(element){
+							element.style.display='none';
+						});
+						this.parentElement.querySelectorAll('.amisoci-right-arrow, .amisoci-ellipsis').forEach(function(element){
+							element.style.display='inline-block';
+						});
+					} else {
+						this.style.display='none';
+						this.parentElement.querySelector('.amisoci-expand-content').style.display='none';
+						this.parentElement.querySelector('.amisoci-right-arrow').style.display='inline-block';
+						this.parentElement.querySelector('.amisoci-ellipsis').style.display='inline-block';
+					}
 				");
 				$text .= $down_arrow->draw();
 				
@@ -55,22 +72,44 @@
 					cursor:pointer;
 					display:none;
 				");
-				$right_arrow->set("onclick","
+				$right_arrow->set("class","amisoci-right-arrow");
+				/*$right_arrow->set("onclick","
 					this.style.display='none';
 					this.previousElementSibling.style.display='inline-block';
 					this.nextElementSibling.style.display='none';
 					this.nextElementSibling.nextElementSibling.style.display='inline';
+					console.log(window.event);
+				");*/
+				$right_arrow->set("onclick","
+					if(window.event.shiftKey){
+						this.parentElement.querySelectorAll('.amisoci-right-arrow, .amisoci-ellipsis').forEach(function(element){
+							element.style.display='none';
+						});
+						this.parentElement.querySelectorAll('.amisoci-down-arrow').forEach(function(element){
+							element.style.display='inline-block';
+						});
+						this.parentElement.querySelectorAll('.amisoci-expand-content').forEach(function(element){
+							element.style.display='inline';
+						});
+					} else {
+						this.style.display='none';
+						this.parentElement.querySelector('.amisoci-ellipsis').style.display='none';
+						this.parentElement.querySelector('.amisoci-down-arrow').style.display='inline-block';
+						this.parentElement.querySelector('.amisoci-expand-content').style.display='inline';
+					}
 				");
 				$text .= $right_arrow->draw();
 				
 				$ellipsis = new Element("span");
 				$ellipsis->set("style","display:none;cursor:pointer;");
-				$ellipsis->set("onclick","
+				$ellipsis->set("class","amisoci-ellipsis");
+				/*$ellipsis->set("onclick","
 					this.style.display='none';
 					this.previousElementSibling.style.display='none';
 					this.previousElementSibling.previousElementSibling.style.display='inline-block';
 					this.nextElementSibling.style.display='inline';
-				");
+					console.log(window.event);
+				");*/
 				$ellipsis->innerHTML("...");
 				$text .= $ellipsis->draw();
 				
@@ -83,7 +122,7 @@
 					
 					$text .= expandArrows();
 					
-					$text .= "<span>
+					$text .= "<span class='amisoci-expand-content'>
 							<div>";
 					$glue = "";
 					for($i=0;$i<$indent;$i++){
@@ -128,7 +167,7 @@
 					$text.=")";
 				} elseif(is_object($data)){
 					$array_object = get_object_vars($data);
-					$text .= "object(".get_class($data).") <sub>".count($array_object)."</sub> {".expandArrows()."<span><div>";
+					$text .= "object(".get_class($data).") <sub>".count($array_object)."</sub> {".expandArrows()."<span class='amisoci-expand-content'><div>";
 					$glue = "";
 					for($i=0;$i<$indent;$i++){
 						$glue .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
