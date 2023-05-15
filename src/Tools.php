@@ -38,13 +38,6 @@
 					cursor:pointer;
 				");
 				$down_arrow->set("class","amisoci-down-arrow");
-				/*$down_arrow->set("onclick","
-					this.style.display='none';
-					this.nextElementSibling.style.display='inline-block';
-					this.nextElementSibling.nextElementSibling.style.display='inline';
-					this.nextElementSibling.nextElementSibling.nextElementSibling.style.display='none';
-					console.log(window.event);
-				");*/
 				$down_arrow->set("onclick","
 					if(window.event.shiftKey){
 						this.parentElement.querySelectorAll('.amisoci-down-arrow, .amisoci-expand-content').forEach(function(element){
@@ -73,13 +66,6 @@
 					display:none;
 				");
 				$right_arrow->set("class","amisoci-right-arrow");
-				/*$right_arrow->set("onclick","
-					this.style.display='none';
-					this.previousElementSibling.style.display='inline-block';
-					this.nextElementSibling.style.display='none';
-					this.nextElementSibling.nextElementSibling.style.display='inline';
-					console.log(window.event);
-				");*/
 				$right_arrow->set("onclick","
 					if(window.event.shiftKey){
 						this.parentElement.querySelectorAll('.amisoci-right-arrow, .amisoci-ellipsis').forEach(function(element){
@@ -103,13 +89,6 @@
 				$ellipsis = new Element("span");
 				$ellipsis->set("style","display:none;cursor:pointer;");
 				$ellipsis->set("class","amisoci-ellipsis");
-				/*$ellipsis->set("onclick","
-					this.style.display='none';
-					this.previousElementSibling.style.display='none';
-					this.previousElementSibling.previousElementSibling.style.display='inline-block';
-					this.nextElementSibling.style.display='inline';
-					console.log(window.event);
-				");*/
 				$ellipsis->innerHTML("...");
 				$text .= $ellipsis->draw();
 				
