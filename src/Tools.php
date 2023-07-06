@@ -1,5 +1,6 @@
 <?php
 	namespace Amisoci;
+	$speed_items = array();
 	class Element {
 		private $attribute = [];
 		private $element="";
@@ -23,6 +24,83 @@
 		}
 	}
 	class Tools{
+		private static function getLastItem(){
+			$last_item = end($GLOBALS["speed_items"]);
+			return is_array($last_item)?self::getLastItem($last_item):$last_item;
+		}
+		public static function speed($text="",$loop_data=false){
+			if($text==""){
+				if(count($GLOBALS["speed_items"])>0){
+					$time_array = array();
+					foreach($GLOBALS["speed_items"] as $name=>$data){
+						if(is_array($data)){
+							$time_array[$name] = array();
+							foreach($data as $index=>$times){
+								$time_array[$name][$index] = $times->interval;
+							}
+						} else {
+							$time_array[$name] = $data->interval;
+						}
+					}
+					self::dump($time_array);
+				} else {
+					$object = new \stdClass();
+					$object->time = hrtime(true);
+					$object->interval = 0;
+					$GLOBALS["speed_items"]=array($object);
+				}
+			} else {
+				$time = hrtime(true);
+				$last_item = self::getLastItem();
+				$seconds = floor(($time-$last_item->time)/1e+9);
+				if(is_string($loop_data)){
+					
+				} elseif(is_array($loop_data)){
+					
+				} else {
+					
+				}
+				self::dump($last_item);
+				exit;
+				/*if($loop_data!==false){
+					if(!isset($GLOBALS["speed_items"][$text])){
+						$seconds = 0;
+					} else {
+						$data = $GLOBALS["speed_items"][$text];
+						$next_index = 0;
+						while(is_array($data)){
+							$data = $data[$loop_data[$next_index++]];
+						}
+						$seconds = floor(($time-end($GLOBALS["speed_items"][$text])->time)/1e+9);
+					}
+				} else {
+					$seconds = floor(($time-end($GLOBALS["speed_items"])->time)/1e+9);
+				}
+				if(is_array(end($GLOBALS["speed_items"]))){
+					$last_item = end($GLOBALS["speed_items"]);
+					$last_time = end($last_item)->time;
+				} else {
+					$last_time = end($GLOBALS["speed_items"])->time;
+				}
+				$milliseconds = floor((($time-$last_time)%1e+9)/1e+6);
+				$microseconds = floor((($time-$last_time)%1e+6)/1e+3);
+				$nanoseconds = floor(($time-$last_time)%1e+3);
+				$interval_string = ($seconds>0?$seconds."s":"");
+				$interval_string .= ($milliseconds>0?($interval_string!=""?", ":"").$milliseconds."ms":"");
+				$interval_string .= ($microseconds>0?($interval_string!=""?", ":"").$microseconds."μs":"");
+				$interval_string .= ($nanoseconds>0?($interval_string!=""?", ":"").$nanoseconds."ns":"");
+				
+				$object = new \stdClass();
+				$object->time = $time;
+				$object->interval = $interval_string;
+				if($loop_data!==false){
+					$GLOBALS["speed_items"][$text][$loop_data]=$object;
+				} else {
+					$GLOBALS["speed_items"][$text]=$object;
+				}*/
+			}
+		}
+		
 		private static function expandArrows(){
 			$text = "";				
 			$down_arrow = new Element("div");
@@ -84,7 +162,7 @@
 			$text .= $right_arrow->draw();
 			
 			$ellipsis = new Element("span");
-			$ellipsis->set("style","display:none;cursor:pointer;");
+			$ellipsis->set("style","display:none;cursor:pointer;user-select: none;");
 			$ellipsis->set("class","amisoci-ellipsis");
 			$ellipsis->innerHTML("...");
 			$text .= $ellipsis->draw();
