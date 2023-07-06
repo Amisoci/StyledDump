@@ -250,7 +250,7 @@
 		}
 		public static function dump($data){
 			$backtrace = debug_backtrace()[0];
-			echo "<i>".$backtrace["file"]." - ".$backtrace["line"]."</i><br>".self::operation($data)."<br><br>";
+			echo "<div><i>".$backtrace["file"]." - ".$backtrace["line"]."</i><br>".self::operation($data)."</div><br><br>";
 		}
 	}
 ?>
