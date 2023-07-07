@@ -28,6 +28,19 @@
 			$last_item = end($GLOBALS["speed_items"]);
 			return is_array($last_item)?self::getLastItem($last_item):$last_item;
 		}
+		private static function updateItem($key_list,$value,$item){
+			$first_key = array_shift($key_list);
+			self::dump($item);
+			self::dump($key_list);
+			if(count($key_list)==0){
+				return $item[$first_key] = $value;
+			} else {
+				if(!isset($item[$first_key])){
+					$item[$first_key] = array();
+				}
+				return $item[$first_key] = self::updateItem($key_list,$value,$item[$first_key]);
+			}
+		}
 		public static function speed($text="",$loop_data=false){
 			if($text==""){
 				if(count($GLOBALS["speed_items"])>0){
@@ -53,14 +66,22 @@
 				$time = hrtime(true);
 				$last_item = self::getLastItem();
 				$seconds = floor(($time-$last_item->time)/1e+9);
+				$milliseconds = floor((($time-$last_item->time)%1e+9)/1e+6);
+				$microseconds = floor((($time-$last_item->time)%1e+6)/1e+3);
+				$nanoseconds = floor(($time-$last_item->time)%1e+3);
+				$interval_string = ($seconds>0?$seconds."s":"");
+				$interval_string .= ($milliseconds>0?($interval_string!=""?", ":"").$milliseconds."ms":"");
+				$interval_string .= ($microseconds>0?($interval_string!=""?", ":"").$microseconds."μs":"");
+				$interval_string .= ($nanoseconds>0?($interval_string!=""?", ":"").$nanoseconds."ns":"");
+				$object = new \stdClass();
+				$object->time = $time;
+				$object->interval = $interval_string;
 				if(is_string($loop_data)){
-					
+					$GLOBALS["speed_items"][$loop_data] = $object;
 				} elseif(is_array($loop_data)){
-					
-				} else {
-					
+					$GLOBALS["speed_items"] = self::updateItem($loop_data,$object,$GLOBALS["speed_items"]);
 				}
-				self::dump($last_item);
+				self::dump($GLOBALS["speed_items"]);
 				exit;
 				/*if($loop_data!==false){
 					if(!isset($GLOBALS["speed_items"][$text])){
@@ -201,7 +222,7 @@
 				$text .= "string(".strlen($data).") ";
 				$string_element = new Element("span");
 				$string_element->set("style","color:HSLA(140,50%,50%,1)");
-				$string_element->innerHTML("\"".$data."\"");
+				$string_element->innerHTML("\"".str_replace(">","&gt;",str_replace("<","&lt;",str_replace("&","&amp;",$data)))."\"");
 				$text.=$string_element->draw();
 			} elseif(is_bool($data)){
 				$text .= "bool(".($data?"true":"false").")";
